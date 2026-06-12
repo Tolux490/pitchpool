@@ -474,11 +474,17 @@ function renderPool(){
     <div class="tabs">${tabs.map(t=>`<button class="${S.tab===t[0]?'on':''}" onclick="S.tab='${t[0]}';renderPool()">${t[1]}</button>`).join("")}</div>
     <div id="tabbody"></div>`;
   const body=$("tabbody");
+  // live refreshes re-render this tab — snapshot any form values so user input survives
+  const keep={};
+  document.querySelectorAll("#tabbody input, #tabbody select").forEach(el=>{ if(el.id) keep[el.id]=el.value; });
+  const segOn=document.querySelector("#g_seg .on")?.dataset.v;
   if(S.tab==="draft") body.innerHTML = p.status==="lobby" ? viewLobby(isOwner) : viewDraft(isOwner);
   if(S.tab==="rosters") body.innerHTML = viewRosters();
   if(S.tab==="tournament") body.innerHTML = viewTournament();
   if(S.tab==="results") body.innerHTML = viewResults(isOwner);
   if(S.tab==="standings") body.innerHTML = viewStandings();
+  for(const id in keep){ const el=$(id); if(el) el.value=keep[id]; }
+  if(segOn){ const b=document.querySelector(`#g_seg button[data-v="${segOn}"]`); if(b){ b.parentElement.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); } }
 }
 
 function viewLobby(isOwner){
