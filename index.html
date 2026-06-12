@@ -188,7 +188,7 @@
 <body>
 <div class="wrap">
   <header class="app">
-    <div class="wordmark"><span class="dot"></span> Pitch Pool <small>WC 2026</small></div>
+    <div class="wordmark"><span class="dot"></span> Pitch Pool <small>WC 2026 · v2.2</small></div>
     <div class="userchip" id="userchip"></div>
   </header>
   <main id="app"></main>
@@ -457,6 +457,9 @@ function nationPoints(nation){
 /* ---------- pool render ---------- */
 function renderPool(){
   const p=S.pool; if(!p) return;
+  // user is mid-pick in a dropdown or score box — don't yank the form away; next refresh will render
+  const ae=document.activeElement;
+  if(ae && ae.closest && ae.closest("#tabbody") && (ae.tagName==="SELECT" || ae.type==="number")) return;
   const isOwner = p.owner===S.user.id;
   const tabs = [["draft", p.status==="lobby"?"Lobby":"Draft"],["rosters","Squads"],["tournament","Tournament"],["results","Record results"],["standings","Standings"]];
   app.innerHTML = `
